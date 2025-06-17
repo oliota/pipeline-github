@@ -2,8 +2,11 @@ name: Auto Commit
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   commit:
@@ -15,8 +18,8 @@ jobs:
       - run: |
           mkdir -p commits
           bash generate_file.sh
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name "Rubem Oliota"
+          git config user.email "oliota@users.noreply.github.com"
           git add commits/
           git commit -m "Auto commit at $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           git push
