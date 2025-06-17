@@ -2,7 +2,8 @@ name: Auto Commit
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/30 * * * *'   # a cada 30 min
+    - cron: '59 23 * * *'    # às 23:59
   workflow_dispatch:
   push:
     branches:
@@ -10,6 +11,7 @@ on:
 
 jobs:
   commit:
+    if: github.event.schedule != '59 23 * * *'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,4 +24,19 @@ jobs:
           git config user.email "oliota@users.noreply.github.com"
           git add commits/
           git commit -m "Auto commit at $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push
+
+  cleanup:
+    if: github.event.schedule == '59 23 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          rm -f commits/*.txt || true
+          git config user.name "Rubem Oliota"
+          git config user.email "oliota@users.noreply.github.com"
+          git add commits/
+          git commit -m "Daily cleanup at $(date '+%Y-%m-%d %H:%M:%S')" || echo "Nothing to clean"
           git push
