@@ -8,8 +8,8 @@ const token = process.env.GH_PAT;
 const today = new Date().toISOString().split('T')[0];
 const branch = `auto/${today}`;
 
-const execHour = parseInt(process.env.EXEC_HOUR || '12');
-const execMin = parseInt(process.env.EXEC_MIN || '30');
+const execHour = parseInt(process.env.EXEC_HOUR || '18');
+const execMin = parseInt(process.env.EXEC_MIN || '50');
 
 const now = new Date();
 const currentHour = now.getUTCHours();

@@ -10,17 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Install dependencies
         run: npm install axios
-      - name: Run contribution script 
+
+      - name: Run contribution script
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          EXEC_HOUR: '12'
-          EXEC_MIN: '30'
+          EXEC_HOUR: ${{ vars.EXEC_HOUR }}
+          EXEC_MIN: ${{ vars.EXEC_MIN }}
         run: node scripts/daily_contribution.js
