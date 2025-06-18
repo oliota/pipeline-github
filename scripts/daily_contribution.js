@@ -55,7 +55,7 @@ const headers = {
     {
       title: `Daily PR - ${today}`,
       head: branch,
-      base: 'main',
+      base: 'master',
       body: 'Auto-generated daily pull request.'
     },
     { headers }
