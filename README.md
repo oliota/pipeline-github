@@ -10,6 +10,7 @@ Automates hourly activity by adding a timestamped line to `contribuition.txt`. H
 * Pushes changes automatically via GitHub Actions
 * Randomly decides (\~50%) when to commit and push, making activity unpredictable
 * Provides test scripts for both Linux (`local_test.sh`) and Windows (`local_test.bat`)
+* Uses the `GITHUB_ACTOR` automatically for commit user/email, so you don’t have to set it manually
 
 ## Getting Started
 
@@ -44,11 +45,11 @@ The `.github/workflows/daily-actions.yml` workflow:
 * Randomly decides (\~50%) if it will commit and push
 * Updates `contribuition.txt` when selected
 * Pushes changes automatically
+* Uses `GITHUB_ACTOR` for commit user/email
 
 ## Directory Structure
 
-```
-root
+```root
 ├─ .github/workflows/daily-actions.yml
 ├─ local_test.sh
 ├─ local_test.bat
