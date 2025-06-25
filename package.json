@@ -4,9 +4,8 @@
   "description": "Automated hourly commit workflow",
   "main": "index.js",
   "scripts": {
-  "node_install": "npm i"
-}
-,
+    "node_install": "npm install"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/oliota/pipeline-github.git"

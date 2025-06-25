@@ -1,51 +1,51 @@
 # Automated Hourly Commit Workflow
 
-## Overview
+## Overview  
+Automates hourly activity by adding a timestamped line to `contribuition.txt`. Keeps your GitHub contribution graph active and natural throughout the year.
 
-Automates hourly activity by adding a timestamped line to `contribuition.txt`. Helps keep your GitHub contribution graph active and natural throughout the year.
+## Features  
+- Adds a timestamp every hour  
+- Pushes changes automatically via GitHub Actions  
+- Randomly decides (~50%) when to commit and push, making activity unpredictable  
+- Uses `GITHUB_ACTOR` automatically for commit user/email in Actions  
 
-## Features
+## How to Setup  
 
-* Adds a timestamp every hour
-* Pushes changes automatically via GitHub Actions
-* Randomly decides (\~50%) when to commit and push, making activity unpredictable
-* Uses the `GITHUB_ACTOR` automatically for commit user/email
+1. **Create a new repository**  
+   - On GitHub, click **New → Repository** and name it `pipeline-github`.  
 
-## Getting Started
+2. **Clone it locally**  
+   ```bash
+   git clone https://github.com/<your-username>/pipeline-github.git
+   cd pipeline-github
+   ```
 
-### Prerequisites
+3. **Download & extract ZIP**  
+   - Download the ZIP of this project and extract its contents.  
 
-* Node.js and npm installed
-* Git configured with your username and email
+4. **Copy files into your clone**  
+   - Copy **all files and folders** from the extracted ZIP into your `pipeline-github` folder, overwriting if prompted.
 
-### Install
+5. **Push initial commit**  
+   ```bash
+   git add .
+   git commit -m "Initialize project"
+   git push
+   ```
 
-Clone the repository:
+### Alternatives without installing anything
 
-```bash
-git clone https://github.com/oliota/pipeline-github.git
-cd pipeline-github
-npm install
-```
+- **Web UI upload**  
+  1. In your new repo on GitHub, click **Add file → Upload files**  
+  2. Drag & drop all files from the extracted ZIP  
+  3. Commit changes
 
-### GitHub Action
+- **Drag & drop locally**  
+  1. Open your cloned `pipeline-github` folder in your file explorer  
+  2. Drag the extracted files into that folder  
+  3. In the terminal, run the push commands from step 5
 
-The `.github/workflows/daily-actions.yml` workflow:
-
-* Triggers every hour
-* Randomly decides (\~50%) if it will commit and push
-* Updates `contribuition.txt` when selected
-* Pushes changes automatically using `GITHUB_ACTOR`
-
-#### ⚡️ Important for Forks
-
-By default, GitHub does NOT run Actions automatically after a fork. To enable them:
-
-* Make a small change (e.g., add a line to `README.md`) and commit/push it.
-* This will trigger the workflow and enable it for future automated runs.
-
-## Directory Structure
-
+## Directory Structure  
 ```
 root
 ├─ .github/workflows/daily-actions.yml
@@ -53,4 +53,3 @@ root
 ├─ package.json
 ├─ README.md
 ```
-
