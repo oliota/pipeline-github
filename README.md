@@ -9,7 +9,7 @@ Automates hourly activity by adding a timestamped line to `contribuition.txt`. H
 * Adds a timestamp every hour
 * Pushes changes automatically via GitHub Actions
 * Randomly decides (\~50%) when to commit and push, making activity unpredictable
-* Uses the `GITHUB_ACTOR` automatically for commit user/email, so you don’t have to set it manually
+* Uses the `GITHUB_ACTOR` automatically for commit user/email
 
 ## Getting Started
 
@@ -28,15 +28,21 @@ cd pipeline-github
 npm install
 ```
 
-## GitHub Action
+### GitHub Action
 
 The `.github/workflows/daily-actions.yml` workflow:
 
 * Triggers every hour
 * Randomly decides (\~50%) if it will commit and push
 * Updates `contribuition.txt` when selected
-* Pushes changes automatically
-* Uses `GITHUB_ACTOR` for commit user/email
+* Pushes changes automatically using `GITHUB_ACTOR`
+
+#### ⚡️ Important for Forks
+
+By default, GitHub does NOT run Actions automatically after a fork. To enable them:
+
+* Make a small change (e.g., add a line to `README.md`) and commit/push it.
+* This will trigger the workflow and enable it for future automated runs.
 
 ## Directory Structure
 
@@ -48,10 +54,3 @@ root
 ├─ README.md
 ```
 
-## Contributing
-
-If you want to add features or fix issues, feel free to open a Pull Request.
-
-## License
-
-This project is licensed under the ISC License.
