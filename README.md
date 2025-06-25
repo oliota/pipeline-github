@@ -7,8 +7,8 @@ This project automates hourly commits to a `contribuition.txt` file. It's ideal 
 ## Features
 
 * Adds a timestamped line every hour
-* Pushes changes to the remote repository automatically
-* Provides a local test script (`local_test.sh`) for manual execution
+* Pushes changes automatically to the remote repository via GitHub Actions
+* Provides separate test scripts for both Linux (`local_test.sh`) and Windows (`local_test.bat`)
 
 ## Getting Started
 
@@ -33,8 +33,16 @@ npm install
 
 Run the script to test hourly contribution behavior:
 
+**For Linux:**
+
 ```bash
-npm run local-test
+npm run local-test:sh
+```
+
+**For Windows:**
+
+```bash
+npm run local-test:win
 ```
 
 #### GitHub Action
@@ -42,23 +50,15 @@ npm run local-test
 The `.github/workflows/daily-actions.yml` workflow triggers every hour and:
 
 * Updates the `contribuition.txt` file
-* Commits and pushes the change
+* Commits and pushes the change automatically
 
 ## Directory Structure
 
-```
-root
+``` root
 ├─ .github/workflows/daily-actions.yml
 ├─ local_test.sh
+├─ local_test.bat
 ├─ contribuition.txt
 ├─ package.json
 ├─ README.md
 ```
-
-## Contributing
-
-If you want to add features or fix issues, feel free to open a Pull Request.
-
-## License
-
-This project is licensed under the ISC License.
