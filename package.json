@@ -4,8 +4,7 @@
   "description": "Automated hourly commit workflow",
   "main": "index.js",
   "scripts": {
-  "local-test:sh": "bash local_test.sh",
-  "local-test:win": "local_test.bat"
+  "node_install": "npm i"
 }
 ,
   "repository": {
