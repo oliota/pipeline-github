@@ -1,80 +1,64 @@
-# 🕒 Auto Commit Timeline (GitHub Actions)
+# Automated Hourly Commit Workflow
 
-This project is a fully automated GitHub Actions workflow that:
+## Overview
 
-- Creates a branch with the current date
-- Commits a timestamped file
-- Opens and closes an issue
-- Creates, approves, and merges a pull request
+This project automates hourly commits to a `contribuition.txt` file. It's ideal for keeping your GitHub contribution graph active and ensuring regular activity in your repositories.
 
-The goal is to generate one real GitHub contribution per day using automation.
+## Features
 
----
+* Adds a timestamped line every hour
+* Pushes changes to the remote repository automatically
+* Provides a local test script (`local_test.sh`) for manual execution
 
-## 🚀 How It Works
+## Getting Started
 
-- The workflow is scheduled with `cron: */5 * * * *` (every 5 minutes)
-- A Node.js script checks if the current UTC time matches the defined target (`EXEC_HOUR` and `EXEC_MIN`)
-- If matched, it executes the full contribution flow
-- Execution tolerance: **±1 minute**
+### Prerequisites
 
----
+* Node.js and npm installed
+* Git configured with your username and email
 
-## 🔐 Required Setup
+### Install
 
-To allow GitHub Actions to push code, create issues, and merge pull requests, a **Personal Access Token** is required.
+Clone the repository:
 
-### 1. **Create a Personal Access Token**
+```bash
+git clone https://github.com/oliota/pipeline-github.git
+cd pipeline-github
+npm install
+```
 
-1. Go to: [https://github.com/settings/tokens](https://github.com/settings/tokens)
-2. Click **"Generate new token (classic)"**
-3. Give it a name like `auto-contributor`
-4. Enable the following scopes:
-   - `repo`
-   - `workflow`
-5. Generate and copy the token (**you won't see it again**)
+### Scripts
 
-### 2. **Create a Secret (`GH_PAT`)**
+#### Local Test
 
-In your repository:
+Run the script to test hourly contribution behavior:
 
-- Go to `Settings` → `Secrets and variables` → `Actions`
-- Click `New repository secret`
-- Name: `GH_PAT`
-- Value: *paste your generated token*
-- Save
+```bash
+npm run local-test
+```
 
----
+#### GitHub Action
 
-## ⚙️ Create an Environment and Variables
+The `.github/workflows/daily-actions.yml` workflow triggers every hour and:
 
-To make the execution hour configurable, use environment-level variables.
+* Updates the `contribuition.txt` file
+* Commits and pushes the change
 
-### 1. **Create an Environment**
+## Directory Structure
 
-1. Go to: `Settings` → `Environments`
-2. Click `New environment`
-3. Name it: `production`
-4. Click `Configure environment`
+```
+root
+├─ .github/workflows/daily-actions.yml
+├─ local_test.sh
+├─ contribuition.txt
+├─ package.json
+├─ README.md
+```
 
-### 2. **Add Variables to the Environment**
+## Contributing
 
-Inside the `production` environment:
+If you want to add features or fix issues, feel free to open a Pull Request.
 
-- `EXEC_HOUR` → Set to your desired **UTC hour** (e.g., `18`)
-- `EXEC_MIN` → Set to your desired **UTC minute** (e.g., `50`)
+## License
 
-> These control the exact time the script will run each day.
-
----
-
-## 🔁 Running Daily
-
-The workflow will be evaluated every 5 minutes. The script will only proceed if the time matches `EXEC_HOUR` and `EXEC_MIN` (±1 minute).
-
-You can also trigger it manually from the **Actions** tab by clicking **"Run workflow"**.
-
----
-
-## 📂 Project Structure
-
+This project is licensed under the ISC License.
