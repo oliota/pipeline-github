@@ -53,3 +53,6 @@ root
 ├─ package.json
 ├─ README.md
 ```
+
+
+![Snake animation](https://github.com/pipeline-github/pipeline-github/blob/output/github-contribution-grid-snake.svg)
