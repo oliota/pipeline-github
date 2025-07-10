@@ -55,4 +55,4 @@ root
 ```
 
 
-![Snake animation](https://github.com/pipeline-github/pipeline-github/blob/output/github-contribution-grid-snake.svg)
+![Snake animation](https://github.com/oliota/pipeline-github/blob/output/github-contribution-grid-snake.svg)
