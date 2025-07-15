@@ -6,6 +6,7 @@ on:
 jobs:
   achievement_pr:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -29,14 +30,15 @@ jobs:
           INDEX=$((RANDOM % ${#MSGS[@]}))
           git commit -m "${MSGS[$INDEX]}" -m "Co-authored-by: ElianeOliota <ElianeOliota@users.noreply.github.com>"
 
-      - name: Push and PR
+      - name: Push and create + merge PR
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           BRANCH="manual/achieve-$(date +%s)"
           git checkout -b $BRANCH
           git push origin $BRANCH
           TITLES=("Automated PR" "Trigger test" "Manual badge run" "Achievement PR")
           INDEX=$((RANDOM % ${#TITLES[@]}))
+          gh auth setup-git
           gh pr create --title "${TITLES[$INDEX]}" --body "Manual PR for badge unlock" --head $BRANCH
           gh pr merge --merge --admin --delete-branch
