@@ -1,0 +1,20 @@
+name: Set Halloween Name
+
+on:
+  schedule:
+    - cron: "0 7 1 10 *"  
+  workflow_dispatch:
+
+jobs:
+  set_halloween_name:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set display name to Halloween theme
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          curl -X PATCH https://api.github.com/user \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -d '{"name":"Rubô the Vampire"}'
