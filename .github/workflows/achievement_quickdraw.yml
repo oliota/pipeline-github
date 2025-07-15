@@ -16,6 +16,7 @@ jobs:
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: Create GitHub Issue
+        id: issue
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
@@ -24,12 +25,13 @@ jobs:
           ISSUE_NUMBER=$(gh issue list --limit 1 --state open --json number --jq '.[0].number')
           echo "ISSUE_NUMBER=$ISSUE_NUMBER" >> $GITHUB_ENV
 
-      - name: Wait 120 seconds to simulate reaction time
-        run: sleep 120
+      - name: Wait 180 seconds to simulate reaction time
+        run: sleep 180
 
       - name: Create branch and fix linked to issue
         run: |
           BRANCH="quickdraw/fix-$(date +%s)"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
           git checkout -b $BRANCH
           mkdir -p quickdraw
           FILE="quickdraw/fix-$RANDOM.txt"
@@ -43,5 +45,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           TITLE="Fix for issue #${ISSUE_NUMBER}"
-          gh pr create --title "$TITLE" --body "Automated PR closing issue #${ISSUE_NUMBER}" --head $BRANCH
+          gh pr create --title "$TITLE" --body "Automated PR closing issue #${ISSUE_NUMBER}" --head "${{ env.BRANCH }}"
           gh pr merge --merge --admin --delete-branch
