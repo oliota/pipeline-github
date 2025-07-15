@@ -15,20 +15,16 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
-      - name: Prepare temp directory and generate file
+      - name: Create multiple commits with co-author
         run: |
           mkdir -p temp
           rm -rf temp/*
-          FILES=("a.txt" "b.txt" "c.txt" "d.txt")
-          TARGET="temp/${FILES[$RANDOM % ${#FILES[@]}]}"
-          echo "Manual run at $(date -u)" >> $TARGET
-
-      - name: Commit with co-author ElianeOliota
-        run: |
-          git add temp
-          MSGS=("fix: manual update" "chore: manual patch" "refactor: trigger test" "feat: simple automation")
-          INDEX=$((RANDOM % ${#MSGS[@]}))
-          git commit -m "${MSGS[$INDEX]}" -m "Co-authored-by: ElianeOliota <ElianeOliota@users.noreply.github.com>"
+          for i in {1..3}; do
+            FILE="temp/commit_$i.txt"
+            echo "Update $i - $(date -u)" >> $FILE
+            git add $FILE
+            git commit -m "chore: update $i" -m "Co-authored-by: ElianeOliota <ElianeOliota@users.noreply.github.com>"
+          done
 
       - name: Push and create + merge PR
         env:
