@@ -1,10 +1,10 @@
-name: Manual Achievement PR
+name: Manual Co-author PR
 
 on:
   workflow_dispatch:
 
 jobs:
-  achievement_pr:
+  coauthor_pr:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,26 +15,23 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
-      - name: Create multiple commits with co-author
+      - name: Create multiple co-authored commits
         run: |
           mkdir -p temp
           rm -rf temp/*
           for i in {1..3}; do
             FILE="temp/commit_$i.txt"
-            echo "Update $i - $(date -u)" >> $FILE
+            echo "Manual staged update $i at $(date -u)" >> $FILE
             git add $FILE
             git commit -m "chore: update $i" -m "Co-authored-by: ElianeOliota <ElianeOliota@users.noreply.github.com>"
           done
 
-      - name: Push and create + merge PR
+      - name: Push branch and open PR
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          BRANCH="manual/achieve-$(date +%s)"
+          BRANCH="manual/achieve-coauthor-$(date +%s)"
           git checkout -b $BRANCH
           git push origin $BRANCH
-          TITLES=("Automated PR" "Trigger test" "Manual badge run" "Achievement PR")
-          INDEX=$((RANDOM % ${#TITLES[@]}))
           gh auth setup-git
-          gh pr create --title "${TITLES[$INDEX]}" --body "Manual PR for badge unlock" --head $BRANCH
-          gh pr merge --merge --admin --delete-branch
+          gh pr create --title "Manual Merge PR with Co-authors" --body "Created by automation, merged manually." --head $BRANCH
