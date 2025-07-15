@@ -1,4 +1,4 @@
-name: Manual Achievement Quickdraw
+name: Achievement Quickdraw
 
 on:
   workflow_dispatch:
@@ -16,14 +16,12 @@ jobs:
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: Create GitHub Issue
-        id: issue
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           TITLE="Quickdraw Issue $(date +%s)"
-          ISSUE_URL=$(gh issue create --title "$TITLE" --body "Auto-generated issue for quickdraw badge" --json url,number -q .url)
-          echo "ISSUE_URL=$ISSUE_URL" >> $GITHUB_ENV
-          ISSUE_NUMBER=$(echo "$ISSUE_URL" | awk -F'/' '{print $NF}')
+          gh issue create --title "$TITLE" --body "Auto-generated issue for quickdraw badge"
+          ISSUE_NUMBER=$(gh issue list --limit 1 --state open --json number --jq '.[0].number')
           echo "ISSUE_NUMBER=$ISSUE_NUMBER" >> $GITHUB_ENV
 
       - name: Wait 120 seconds to simulate reaction time
