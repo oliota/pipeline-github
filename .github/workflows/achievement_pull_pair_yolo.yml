@@ -1,0 +1,42 @@
+name: Manual Achievement PR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  achievement_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
+      - name: Prepare temp directory and generate file
+        run: |
+          mkdir -p temp
+          rm -rf temp/*
+          FILES=("a.txt" "b.txt" "c.txt" "d.txt")
+          TARGET="temp/${FILES[$RANDOM % ${#FILES[@]}]}"
+          echo "Manual run at $(date -u)" >> $TARGET
+
+      - name: Commit with co-author ElianeOliota
+        run: |
+          git add temp
+          MSGS=("fix: manual update" "chore: manual patch" "refactor: trigger test" "feat: simple automation")
+          INDEX=$((RANDOM % ${#MSGS[@]}))
+          git commit -m "${MSGS[$INDEX]}" -m "Co-authored-by: ElianeOliota <ElianeOliota@users.noreply.github.com>"
+
+      - name: Push and PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="manual/achieve-$(date +%s)"
+          git checkout -b $BRANCH
+          git push origin $BRANCH
+          TITLES=("Automated PR" "Trigger test" "Manual badge run" "Achievement PR")
+          INDEX=$((RANDOM % ${#TITLES[@]}))
+          gh pr create --title "${TITLES[$INDEX]}" --body "Manual PR for badge unlock" --head $BRANCH
+          gh pr merge --merge --admin --delete-branch
