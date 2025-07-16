@@ -2,7 +2,7 @@ name: Restore Original Name
 
 on:
   schedule:
-    - cron: "0 9 1 10 *"  
+    - cron: "0 10 16 7 *"  
   workflow_dispatch:
 
 jobs:
