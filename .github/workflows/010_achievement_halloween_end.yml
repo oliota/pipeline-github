@@ -1,0 +1,28 @@
+name: Restore Original Profile
+
+on:
+  schedule:
+    - cron: "0 7 2 11 *"
+  workflow_dispatch:
+
+jobs:
+  restore_profile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Restore original profile
+        env:
+          GH_TOKEN: ${{ secrets.GH_ALL_TOKEN }}
+        run: |
+          curl -X PATCH https://api.github.com/user \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -d '{
+            "name": "Rubem Oliota",
+            "bio": "When you base your expectations only on what you can see, you limit yourself to not seeing the possibilities of a new reality.",
+            "company": "Kwan",
+            "location": "Lisboa",
+            "blog": "https://oliota.com",
+            "twitter_username": null,
+            "hireable": false
+          }'

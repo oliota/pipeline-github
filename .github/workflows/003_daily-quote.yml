@@ -1,0 +1,28 @@
+name: Daily Thoughtful Quote Bio
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+jobs:
+  update_bio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch quote and update bio with date
+        env:
+          GH_TOKEN: ${{ secrets.GH_ALL_TOKEN }}
+        run: |
+          today=$(date +'%d/%m/%Y')
+          while :; do
+            json=$(curl -s "https://api.quotable.io/random?maxLength=160")
+            content=$(echo "$json" | jq -r '.content')
+            author=$(echo "$json" | jq -r '.author')
+            full="$today — $author — $content"
+            [ ${#full} -le 160 ] && break
+          done
+
+          curl -X PATCH https://api.github.com/user \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -d "{\"bio\":\"$full\"}"

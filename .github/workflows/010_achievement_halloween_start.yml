@@ -1,0 +1,28 @@
+name: Set Halloween Name
+
+on:
+  schedule:
+    - cron: "0 7 1 10 *"
+  workflow_dispatch:
+
+jobs:
+  set_halloween_name:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Halloween profile
+        env:
+          GH_TOKEN: ${{ secrets.GH_ALL_TOKEN }}
+        run: |
+          curl -X PATCH https://api.github.com/user \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -d '{
+            "name": "Rubô the Vampire",
+            "bio": "Coding from the shadows... 🔮",
+            "company": "Haunted Kwan",
+            "location": "Transylvania, Lisboa",
+            "blog": "https://oliota.com/halloween",
+            "twitter_username": null,
+            "hireable": false
+          }'
