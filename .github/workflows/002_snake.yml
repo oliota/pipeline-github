@@ -1,4 +1,4 @@
-name: Generate Snake Animation
+name: 002 - Generate Snake Animation 🐍
 
 on:
   schedule:

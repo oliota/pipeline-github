@@ -1,4 +1,4 @@
-name: Manual Co-author PR
+name: Manual Co-author PR 2️⃣
 
 on:
   workflow_dispatch:

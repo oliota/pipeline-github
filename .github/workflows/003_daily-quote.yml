@@ -1,4 +1,4 @@
-name: Daily Thoughtful Quote Bio
+name: 003 - Daily Zen Quote Bio 🙏
 
 on:
   schedule:
@@ -9,20 +9,20 @@ jobs:
   update_bio:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch quote and update bio with date
+      - name: Fetch zen quote and update bio with date
         env:
           GH_TOKEN: ${{ secrets.GH_ALL_TOKEN }}
         run: |
           today=$(date +'%d/%m/%Y')
           while :; do
-            json=$(curl -s "https://api.quotable.io/random?maxLength=160")
-            content=$(echo "$json" | jq -r '.content')
-            author=$(echo "$json" | jq -r '.author')
+            json=$(curl -sf --retry 3 https://zenquotes.io/api/random) || exit 1
+            content=$(echo "$json" | jq -r '.[0].q')
+            author=$(echo "$json" | jq -r '.[0].a')
             full="$today — $author — $content"
             [ ${#full} -le 160 ] && break
           done
 
-          curl -X PATCH https://api.github.com/user \
+          curl -s -X PATCH https://api.github.com/user \
             -H "Authorization: token $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -d "{\"bio\":\"$full\"}"
