@@ -14,52 +14,10 @@ jobs:
       - name: Setup environment
         run: sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Get daily quote
-        id: thought
+      - name: Run thought updater script
+        env:
+          GH_ALL_TOKEN: ${{ secrets.GH_ALL_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
         run: |
-          DATE=$(date +'%d/%m/%Y')
-          for i in {1..5}; do
-            DATA=$(curl -sf https://zenquotes.io/api/random) || continue
-            QUOTE=$(echo "$DATA" | jq -r '.[0].q')
-            AUTHOR=$(echo "$DATA" | jq -r '.[0].a')
-            COMBINED="$DATE — $AUTHOR — $QUOTE"
-            if [ "${#COMBINED}" -le 160 ]; then
-              printf '![Data](https://img.shields.io/badge/%s-Zen--Thought-blue)\n\n\`\`\`txt\n"%s"\n— %s\n\`\`\`\n' "$DATE" "$QUOTE" "$AUTHOR" > new_thought.md
-              exit 0
-            fi
-          done
-          echo "No suitable quote found." && exit 1
-
-      - name: Update profile repository
-        run: |
-          git clone https://x-access-token:${{ secrets.GH_ALL_TOKEN }}@github.com/${{ github.repository_owner }}/${{ github.repository_owner }}.git profile-repo
-          cd profile-repo
-
-          # Garante que os delimitadores existam
-          if ! grep -q '<!-- thought:start -->' README.md; then
-            echo -e '\n<!-- thought:start -->\n<!-- thought:end -->' >> README.md
-          fi
-
-          # Substitui bloco entre os delimitadores
-          awk '
-            BEGIN {found=0}
-            /<!-- thought:start -->/ {
-              print
-              while ((getline line < "new_thought.md") > 0) print line
-              found=1
-              skip=1
-              next
-            }
-            /<!-- thought:end -->/ {
-              if (found) { print; skip=0; next }
-            }
-            !skip
-          ' README.md > updated.md
-
-          mv updated.md README.md
-
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git add README.md
-          git commit -m "chore: update daily zen thought"
-          git push
+          chmod +x .github/scripts/update_thought.sh
+          bash .github/scripts/update_thought.sh
