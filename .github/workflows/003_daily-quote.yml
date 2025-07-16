@@ -26,3 +26,4 @@ jobs:
             -H "Authorization: token $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             -d "{\"bio\":\"$full\"}"
+
