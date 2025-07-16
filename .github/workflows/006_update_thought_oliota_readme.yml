@@ -24,7 +24,7 @@ jobs:
             AUTHOR=$(echo "$DATA" | jq -r '.[0].a')
             COMBINED="$DATE — $AUTHOR — $QUOTE"
             if [ "${#COMBINED}" -le 160 ]; then
-              ESCAPED=$(printf '![Data](https://img.shields.io/badge/%s-Zen--Thought-blue)\\n\\n\\`\\`\\`txt\\n\\"%s\\"\\n— %s\\n\\`\\`\\`' "$DATE" "$QUOTE" "$AUTHOR")
+              ESCAPED=$(printf '![Data](https://img.shields.io/badge/%s-Zen--Thought-blue)\\n\\n\\`\\`\\`txt\\n"%s"\\n— %s\\n\\`\\`\\`' "$DATE" "$QUOTE" "$AUTHOR")
               echo "BLOCK<<EOF" >> $GITHUB_OUTPUT
               echo "$ESCAPED" >> $GITHUB_OUTPUT
               echo "EOF" >> $GITHUB_OUTPUT
@@ -44,13 +44,26 @@ jobs:
 
           awk '/<!-- thought:start -->/ {
             print;
-            print "${{ steps.thought.outputs.BLOCK }}";
             while (getline && $0 !~ /<!-- thought:end -->/);
             print "<!-- thought:end -->";
             next
           } 1' README.md > temp.md
 
           mv temp.md README.md
+
+          # append new content between markers
+          awk -v block="${{ steps.thought.outputs.BLOCK }}" '
+            BEGIN { printed = 0 }
+            {
+              print
+              if ($0 ~ /<!-- thought:start -->/ && !printed) {
+                print block
+                printed = 1
+              }
+            }' README.md > updated.md
+
+          mv updated.md README.md
+
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
           git add README.md
