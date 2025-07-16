@@ -1,4 +1,4 @@
-name: 006 - Daily Thought Update - README 🧘‍♂️
+name: 006 - Daily Thought Update 🧘‍♂️
 
 on:
   schedule:
@@ -23,8 +23,8 @@ jobs:
             QUOTE=$(echo "$DATA" | jq -r '.[0].q')
             AUTHOR=$(echo "$DATA" | jq -r '.[0].a')
             COMBINED="$DATE — $AUTHOR — $QUOTE"
-            if [ ${#COMBINED} -le 160 ]; then
-              ESCAPED=$(printf '![Data](https://img.shields.io/badge/%s-Zen--Thought-blue)\n\n\`\`\`txt\n"%s"\n— %s\n\`\`\`' "$DATE" "$QUOTE" "$AUTHOR")
+            if [ "${#COMBINED}" -le 160 ]; then
+              ESCAPED=$(printf '![Data](https://img.shields.io/badge/%s-Zen--Thought-blue)\\n\\n\\`\\`\\`txt\\n\\"%s\\"\\n— %s\\n\\`\\`\\`' "$DATE" "$QUOTE" "$AUTHOR")
               echo "BLOCK<<EOF" >> $GITHUB_OUTPUT
               echo "$ESCAPED" >> $GITHUB_OUTPUT
               echo "EOF" >> $GITHUB_OUTPUT
@@ -37,7 +37,7 @@ jobs:
         run: |
           git clone https://x-access-token:${{ secrets.GH_ALL_TOKEN }}@github.com/oliota/oliota.git
           cd oliota
-          awk '/<!-- thought:start -->/{print;getline;while($0!~/<!-- thought:end -->/)getline;print ENVIRON["BLOCK"]; next}1' README.md > temp.md
+          awk '/<!-- thought:start -->/{print;getline;while($0!~/<!-- thought:end -->/)getline;print "${{ steps.thought.outputs.BLOCK }}"; next}1' README.md > temp.md
           mv temp.md README.md
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
