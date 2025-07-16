@@ -24,9 +24,7 @@ jobs:
             AUTHOR=$(echo "$DATA" | jq -r '.[0].a')
             COMBINED="$DATE — $AUTHOR — $QUOTE"
             if [ "${#COMBINED}" -le 160 ]; then
-              echo "BLOCK<<EOF" >> $GITHUB_OUTPUT
-              printf '![Data](https://img.shields.io/badge/%s-Zen--Thought-blue)\n\n\`\`\`txt\n"%s"\n— %s\n\`\`\`\n' "$DATE" "$QUOTE" "$AUTHOR" >> $GITHUB_OUTPUT
-              echo "EOF" >> $GITHUB_OUTPUT
+              printf '![Data](https://img.shields.io/badge/%s-Zen--Thought-blue)\n\n\`\`\`txt\n"%s"\n— %s\n\`\`\`\n' "$DATE" "$QUOTE" "$AUTHOR" > new_thought.md
               exit 0
             fi
           done
@@ -37,13 +35,28 @@ jobs:
           git clone https://x-access-token:${{ secrets.GH_ALL_TOKEN }}@github.com/${{ github.repository_owner }}/${{ github.repository_owner }}.git profile-repo
           cd profile-repo
 
-          # Garantir que o bloco exista
+          # Garante que os delimitadores existam
           if ! grep -q '<!-- thought:start -->' README.md; then
             echo -e '\n<!-- thought:start -->\n<!-- thought:end -->' >> README.md
           fi
 
-          # Substitui o conteúdo entre os delimitadores
-          perl -0777 -i -pe "s|<!-- thought:start -->.*?<!-- thought:end -->|<!-- thought:start -->\n${{ steps.thought.outputs.BLOCK }}\n<!-- thought:end -->|s" README.md
+          # Substitui bloco entre os delimitadores
+          awk '
+            BEGIN {found=0}
+            /<!-- thought:start -->/ {
+              print
+              while ((getline line < "new_thought.md") > 0) print line
+              found=1
+              skip=1
+              next
+            }
+            /<!-- thought:end -->/ {
+              if (found) { print; skip=0; next }
+            }
+            !skip
+          ' README.md > updated.md
+
+          mv updated.md README.md
 
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
