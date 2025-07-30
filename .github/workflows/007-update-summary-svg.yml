@@ -1,0 +1,20 @@
+name: 007 - Daily Summary SVG Update 🖼️
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-summary-svg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run summary SVG updater
+        env:
+          GH_ALL_TOKEN: ${{ secrets.GH_ALL_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+        run: |
+          chmod +x .github/scripts/update_summary_svg.sh
+          bash .github/scripts/update_summary_svg.sh
