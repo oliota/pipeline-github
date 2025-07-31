@@ -13,7 +13,7 @@ if ! grep -q "<!-- summary:start -->" README.md; then
   echo -e "\n<!-- summary:start -->\n<!-- summary:end -->" >> README.md
 fi
 
-awk -v block="![GitHub Summary](${SVG_URL})" '
+awk -v block="<img src=\"${SVG_URL}\" alt=\"GitHub Summary\" />" '
   /<!-- summary:start -->/ {
     print
     print block
